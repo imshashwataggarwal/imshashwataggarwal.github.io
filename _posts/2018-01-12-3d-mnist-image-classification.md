@@ -16,7 +16,9 @@ description: 3D Convolutional Neural Network for 3D MNIST Classification.
 
 
 ![](https://cdn-images-1.medium.com/max/2000/1*fdWjdXMEeqZeiT2brfP4Zg.png){: class="bigger-image" }
-<figcaption class="caption">2D vs 3D MNIST.</figcaption>
+<figcaption>2D vs 3D MNIST.</figcaption>
+
+<br>
 
 <span class="evidence">By [Shashwat Aggarwal](https://medium.com/@ishashwataggarwal) on [January 12, 2018](https://medium.com/p/b922a3d07334).</span>
 
@@ -53,31 +55,33 @@ y_test  = f["y_test"][:]     # shape: (2000,)
 
 Here is an example to read a digit and store its group content in a tuple.
 
-```
->>> with h5.File('train_point_clouds.h5', 'r') as f:  
-      # Reading digit at zeroth index      
-      a = f["0"]     
-      # Storing group contents of digit a  
-      digit = (a["img"][:], a["points"][:], a.attrs["label"])
-```
+{% highlight python %}
+with h5.File('train_point_clouds.h5', 'r') as f:  
+    # Reading digit at zeroth index      
+    a = f["0"]     
+    # Storing group contents of digit a  
+    digit = (a["img"][:], a["points"][:], a.attrs["label"])
+{% endhighlight %}
+
 
 Let’s first visualize the contents stored in the tuple with `matplotlib`. The following code plots the first 15 images from the original 2D MNIST with their corresponding labels:
 
-```
->>> # Plot some examples from original 2D-MNIST  
->>> fig, ax = plt.subplots(3,5, figsize=(12, 12), facecolor='w', edgecolor='k')
+{% highlight python %}
+# Plot some examples from original 2D-MNIST  
+fig, ax = plt.subplots(3,5, figsize=(12, 12), facecolor='w', edgecolor='k')
 
->>> fig.subplots_adjust(hspace = .5, wspace=.2)
+fig.subplots_adjust(hspace = .5, wspace=.2)
 
->>> for ax, d in zip(axs.ravel(), digits):  
-      ax.imshow(d[0][:])  
-      ax.set_title("Digit: " + str(d[2]))
-```
+for ax, d in zip(axs.ravel(), digits):  
+    ax.imshow(d[0][:])  
+    ax.set_title("Digit: " + str(d[2]))
+{% endhighlight %}
+
 <br>
 
 ![](https://cdn-images-1.medium.com/max/800/1*-KOJToUMVGIbuRCT-KLIpQ.png)
 
-<center> First 15 example images along with their labels from the 2D MNIST.</center>
+<figcaption> First 15 example images along with their labels from the 2D MNIST.</figcaption>
 
 <br>
 
@@ -85,36 +89,41 @@ Before visualizing the 3D point clouds, let’s first discuss about Voxelization
 
 ![](https://github.com/imshashwataggarwal/imshashwataggarwal.github.io/blob/master/assets/images/1.png)
 
-<center>Voxel Grid with a single voxel shaded. Source: **[5]**</center>
+<figcaption>Voxel Grid with a single voxel shaded. Source: [5]</figcaption>
 
 <br>
 
 We use this process to fit an axis-aligned bounding box called the Voxel Grid around the point clouds and subdivide the grid into segments, assigning each point in the point cloud to one of the sub boxes (known as voxels, analogous to pixels). We split the grid into 16 segments along each axis resulting in a total of 4096 voxels, equivalent to the 4th level of an Octree.
 
-```
->>> voxel_grid = VoxelGrid(digit, x_y_z = [16, 16, 16])
-```
+{% highlight python %}
+voxel_grid = VoxelGrid(digit, x_y_z = [16, 16, 16])
+{% endhighlight %}
+
 
 The code above generates a voxel grid of `16 × 16 × 16 = 4096` voxels, with the structure attribute representing a 2D array, where each row represents a point in the original point cloud and each column represents the `n_voxel` where it lies with respect to `[x_axis, y_axis, z_axis, global]`.
-```
->>> voxel_grid.structure[0]
 
+{% highlight python %}
+voxel_grid.structure[0]
+{% endhighlight %}
+```
 array([ 5, 3, 7, 477])
 ```
+
 The histogram shown below visualize the number of points present within each voxel. From the plot, it can be seen that there are a lot of empty voxels. This is due to the use of a cuboid bounding box to ensure that the Voxel Grid will divide the cloud in a similar way even when the point clouds are oriented to different directions.
 
-```
->>> # Get the count of points within each voxel.  
->>> plt.title("DIGIT: " + str(digits[0][-1]))  
->>> plt.xlabel("VOXEL")  
->>> plt.ylabel("POINTS INSIDE THE VOXEL")  
->>> count_plot(voxels[0].structure[:,-1])   
-```
+{% highlight python %}
+# Get the count of points within each voxel.  
+plt.title("DIGIT: " + str(digits[0][-1]))  
+plt.xlabel("VOXEL")  
+plt.ylabel("POINTS INSIDE THE VOXEL")  
+count_plot(voxels[0].structure[:,-1])   
+{% endhighlight %}
+
 <br>
 
 ![](https://cdn-images-1.medium.com/max/800/1*sjmc4lBUp9iuKQ7NfhM0zw.png)
 
-<center>Number of Points within each Voxel for a sample of digit 5.</center>
+<figcaption>Number of Points within each Voxel for a sample of digit 5.</figcaption>
 
 <br>
 
