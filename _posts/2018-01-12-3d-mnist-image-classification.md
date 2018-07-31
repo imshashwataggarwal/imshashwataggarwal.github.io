@@ -14,11 +14,9 @@ author: imshashwataggarwal
 description: 3D Convolutional Neural Network for 3D MNIST Classification.
 ---
 
-# <center> 3D-MNIST Image Classification </center>
 
-![](https://cdn-images-1.medium.com/max/2000/1*fdWjdXMEeqZeiT2brfP4Zg.png)
-
-<center>2D vs 3D MNIST.</center>
+![](https://cdn-images-1.medium.com/max/2000/1*fdWjdXMEeqZeiT2brfP4Zg.png){: class="bigger-image" }
+<figcaption class="caption">2D vs 3D MNIST.</figcaption>
 
 <span class="evidence">By [Shashwat Aggarwal](https://medium.com/@ishashwataggarwal) on [January 12, 2018](https://medium.com/p/b922a3d07334).</span>
 
@@ -45,12 +43,13 @@ The 3D MNIST dataset is available in [HDF5 file format](https://support.hdfgroup
 
 In addition to train and test point clouds, the dataset also contains `full_dataset_vectors.h5` that stores _4096-D_ vectors obtained from voxelization of all the 3D point clouds and their randomly rotated copies with noise. The `full_dataset_vectors.h5` is splitted into _4_ groups:
 
-```
->>> X_train = f["X_train"][:]    # shape: (10000, 4096)
->>> y_train = f["y_train"][:]    # shape: (10000,)   
->>> X_test  = f["X_test"][:]     # shape: (2000, 4096) 
->>> y_test  = f["y_test"][:]     # shape: (2000,)
-```
+{% highlight python %}
+X_train = f["X_train"][:]    # shape: (10000, 4096)
+y_train = f["y_train"][:]    # shape: (10000,)   
+X_test  = f["X_test"][:]     # shape: (2000, 4096) 
+y_test  = f["y_test"][:]     # shape: (2000,)
+{% endhighlight %}
+
 
 Here is an example to read a digit and store its group content in a tuple.
 
@@ -84,9 +83,9 @@ Let’s first visualize the contents stored in the tuple with `matplotlib`. The 
 
 Before visualizing the 3D point clouds, let’s first discuss about Voxelization. **_Voxelization_** is the process of conversion of a geometric object from its continuous geometric representation into a set of voxels that best approximates the continuous object. The process mimics the scan-conversion process that rasterizes 2D geometric objects, and is also referred to as [3D scan-conversion](http://labs.cs.sunysb.edu/labs/projects/volume/Papers/glossary.html#voxelization:).
 
-![](https://cdn-images-1.medium.com/max/800/1*Bc26WD8NyH5_9Y7q72Y-9A.png)
+![](https://github.com/imshashwataggarwal/imshashwataggarwal.github.io/blob/master/assets/images/1.png)
 
-<center>Voxel Grid with a single voxel shaded. Source: **\[5\]**</center>
+<center>Voxel Grid with a single voxel shaded. Source: **[5]**</center>
 
 <br>
 
@@ -290,7 +289,7 @@ Convolutional Neural Networks (CNN), have been immensely successful in classifyi
 
 > We tried several other shapes such as `(-1, 64, 64, 1)`, `(-1, 64, 64, 3)` but `(-1, 16, 16, 16)` gave the best results, so we stick with this.
 
-{ % gist imshashwataggarwal/9a4eabf0d03ef755060a5d4b82ef3875 % }
+{ % gist imshashwataggarwal/9a4eabf0d03ef755060a5d4b82ef3875#file-2dcnn-py % }
 
 **Output**   
 ```
@@ -367,7 +366,7 @@ Epoch 30/30
 Finally, we move onto the main objective of this post (:P), 3D CNN. The 3D CNN model is similar to our 2D CNN model. For the complete definition of the model, check the `model()` method. Now, like with 2D CNN, the 3D CNN expects a 5D tensor of shape `(batch_size, conv_dim1, conv_dim2, conv_dim3, input_channels)`. We reshape out input to a 5D tensor — `(-1, 16, 16, 16, 3)`and feed it to our 3D CNN.
 
 
-{ % gist imshashwataggarwal/89e78280267bfd6bf195707ff9b47d93 % }
+{ % gist imshashwataggarwal/89e78280267bfd6bf195707ff9b47d93#file-3d_cnn-py % }
 
 **Output**
 
@@ -474,7 +473,7 @@ The performance of 2D CNN is close to Random Forests with a test-score of 69.8%,
 
 In this blog post, we experimented with 3D MNIST dataset, that proved to be a good benchmark for starting with 3D Datasets. Here is a list of few more 3D Datasets that are worth playing with:
 
-<iframe width="560" height="310" src="http://pie.med.utoronto.ca/TEE/TEE_content/assets/video/3Dtee/Epiq7/3DCropping/AutoCrop/index.html" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="310" src="https://www.youtube.com/watch?v=MqcZYw8Tgpc" frameborder="0" allowfullscreen></iframe>
 
 
 1.  **Data Science Bowl** 2017, available [here](https://www.kaggle.com/c/data-science-bowl-2017/data).
